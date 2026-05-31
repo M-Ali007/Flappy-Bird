@@ -7,7 +7,7 @@
 # Consider any possible problems or limitations pertaining to this program.
 # What are they? Make the necessary modifications.
 #
-# A problem that I came across was #TODO
+# A problem that I came across was
 
 import pygame, sys, random
 

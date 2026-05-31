@@ -53,6 +53,10 @@ def check_collision(pipes):
 
     return True
 
+def rotate_bird(bird):
+    new_bird = pygame.transform.rotozoom(bird, bird_movement, 1)
+    return new_bird
+
 pygame.init()
 screen = pygame.display.set_mode((576,1024))
 clock = pygame.time.Clock()
@@ -106,8 +110,9 @@ while True:
     if game_active:
         #bird
         bird_movement += gravity
+        rotated_bird = rotate_bird(bird_surface)
         bird_rect.centery += bird_movement
-        screen.blit(bird_surface, bird_rect)
+        screen.blit(rotated_bird, bird_rect)
         game_active = check_collision(pipe_list)
 
         #pipes

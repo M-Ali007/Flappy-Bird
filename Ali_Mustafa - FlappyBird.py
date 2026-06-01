@@ -62,11 +62,16 @@ def bird_animation():
     new_bird_rect = new_bird.get_rect(center = (100, bird_rect.centery))
     return new_bird, new_bird_rect
 
+def score_display():
+    score_surface = game_font.render(str(int(score)), True, (255,255,255))
+    score_rect = score_surface.get_rect(center = (288, 100))
+    screen.blit(score_surface, score_rect)
 
 pygame.init()
 screen = pygame.display.set_mode((576,1024))
 clock = pygame.time.Clock()
-pygame.display.set_caption(f"Flappy Mustafa - FPS: {int(clock.get_fps())}")
+pygame.display.set_caption(f"Flappy Mustafa")
+game_font = pygame.font.Font('04B_19.TTF',40)
 
 
 # Global Game Vars
@@ -143,6 +148,10 @@ while True:
         #pipes
         pipe_list = move_pipes(pipe_list)
         draw_pipes(pipe_list)
+
+        #score
+        score += 0.01
+        score_display()
 
     #floor
     floor_x_pos -= 1

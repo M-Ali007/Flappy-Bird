@@ -137,7 +137,7 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE and game_active:
                 bird_movement = 0
-                bird_movement -= 12
+                bird_movement -= 8
             if event.key == pygame.K_SPACE and not game_active:
                 game_active = True
                 pipe_list.clear()

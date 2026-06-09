@@ -125,10 +125,18 @@ def update_score(score, highscore):
 
 # --- Setup ---
 pygame.init()
+pygame.mixer.init()
 screen = pygame.display.set_mode((576, 1024))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Flappy Mustafa")
 game_font = pygame.font.Font('04B_19.TTF', 40)
+
+# Sound effects
+sound_wing      = pygame.mixer.Sound('sound/sfx_wing.wav')
+sound_hit       = pygame.mixer.Sound('sound/sfx_hit.wav')
+sound_die       = pygame.mixer.Sound('sound/sfx_die.wav')
+sound_point     = pygame.mixer.Sound('sound/sfx_point.wav')
+sound_swooshing = pygame.mixer.Sound('sound/sfx_swooshing.wav')
 
 # Game state variables
 gravity = 0.25
@@ -179,6 +187,7 @@ while True:
                 # Jump — reset vertical speed then apply upward force
                 bird_movement = 0
                 bird_movement -= 8
+                sound_wing.play()
             if event.key == pygame.K_SPACE and not game_active:
                 # Restart — reset all game state
                 game_active = True
@@ -186,6 +195,7 @@ while True:
                 bird_rect.center = (100, 512)
                 bird_movement = 0
                 score = 0
+                sound_swooshing.play()
 
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())
@@ -207,14 +217,21 @@ while True:
         rotated_bird = rotate_bird(bird_surface)
         bird_rect.centery += bird_movement
         screen.blit(rotated_bird, bird_rect)
-        game_active = check_collision(pipe_list)
+        still_alive = check_collision(pipe_list)
+        if not still_alive:
+            sound_hit.play()
+            sound_die.play()
+        game_active = still_alive
 
         # Pipes — scroll left and draw
         pipe_list = move_pipes(pipe_list)
         draw_pipes(pipe_list)
 
         # Score — count how many bottom pipes have passed the bird
-        score = sum(1 for pipe in pipe_list if pipe.bottom >= 1024 and pipe.right < bird_rect.left)
+        new_score = sum(1 for pipe in pipe_list if pipe.bottom >= 1024 and pipe.right < bird_rect.left)
+        if new_score > score:
+            sound_point.play()
+        score = new_score
         score_display("main_game")
 
     else:
